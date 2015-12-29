@@ -32,17 +32,20 @@ class NewVisitorTest(unittest.TestCase):
         #display item
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: hello' for row in rows),
-            "New to-do item did not appear in table"
-        )
+        self.assertIn('1: hello', [row.text for row in rows])
         
         # ability to enter another item
+        inputbox = self.browser.find_element_by_id('id_new_item')
 
         # enter second item
-
+        inputbox.send_keys('hellow')
+        inputbox.send_keys(Keys.ENTER)
+        
         # both items show on page
-
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: hello', [row.text for row in rows])
+        self.assertIn('2: hellow', [row.text for row in rows])
         # unique url displayed
 
         # url shows list
