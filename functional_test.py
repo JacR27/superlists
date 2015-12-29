@@ -11,6 +11,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_post_and_get_to_do_items(self):
         
         # go to home page
@@ -30,9 +35,7 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys('hello')
         inputbox.send_keys(Keys.ENTER)
         #display item
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: hello', [row.text for row in rows])
+        self.check_for_row_in_table("1: hello")
         
         # ability to enter another item
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -40,12 +43,11 @@ class NewVisitorTest(unittest.TestCase):
         # enter second item
         inputbox.send_keys('hellow')
         inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_table("1: hello")
+        self.check_for_row_in_table("2: hellow")
+        
         
         # both items show on page
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: hello', [row.text for row in rows])
-        self.assertIn('2: hellow', [row.text for row in rows])
         # unique url displayed
 
         # url shows list
